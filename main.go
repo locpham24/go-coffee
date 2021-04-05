@@ -1,10 +1,19 @@
 package main
 
 import (
-	"github.com/fatih/color"
-	"rsc.io/quote"
+	"fmt"
+	"github.com/locpham24/go-coffee/app/handler"
+	"github.com/locpham24/go-coffee/config"
 )
 
 func main() {
-	color.Cyan(quote.Hello())
+	engine := handler.InitEngine()
+
+	configs, err := config.LoadConfig("config")
+	if err != nil { // Handle errors reading the config file
+		panic(err)
+	}
+
+	fmt.Println("db username", configs.PostgreSQL.Username)
+	engine.Run()
 }
