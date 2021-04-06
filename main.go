@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/locpham24/go-coffee/app/handler"
 	"github.com/locpham24/go-coffee/config"
+	"github.com/locpham24/go-coffee/infra"
 )
 
 func main() {
@@ -14,6 +14,6 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println("db username", configs.PostgreSQL.Username)
+	infra.InitPostgreSQL(configs)
 	engine.Run()
 }
