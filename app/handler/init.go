@@ -11,6 +11,12 @@ func InitEngine() *gin.Engine {
 	return a
 }
 
+type ResponseFromHandler struct {
+	Code  int
+	Data  interface{}
+	Error error
+}
+
 func setupApiV1(app *gin.Engine) {
 	userHandler := NewUserRouter()
 	apiGroup := app.Group("v1")

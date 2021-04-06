@@ -26,17 +26,23 @@ func (h *UserHandler) Hello(c *gin.Context) {
 func (h *UserHandler) RegisterPhone(c *gin.Context) {
 	var input form.RegisterPhoneNumber
 	if err := c.Bind(&input); err != nil {
+		c.Error(err)
 		return
 	}
 
 	userEntity := entity.UserEntity{}
 	user, err := userEntity.Create(input)
 	if err != nil {
+		c.AbortWithStatusJSON(500, ResponseFromHandler{
+			Data:  err.Error(),
+			Error: err,
+		})
 		return
 	}
 
 	userView, err := response.PopulateUserView(user)
 	if err != nil {
+		c.Error(err)
 		return
 	}
 	c.JSON(200, userView)
