@@ -5,6 +5,9 @@ import (
 	"github.com/locpham24/go-coffee/app/entity"
 	"github.com/locpham24/go-coffee/app/form"
 	"github.com/locpham24/go-coffee/app/response"
+	"github.com/locpham24/go-coffee/infra"
+	"github.com/sirupsen/logrus"
+	"net/http"
 )
 
 type UserRouter interface {
@@ -26,23 +29,23 @@ func (h *UserHandler) Hello(c *gin.Context) {
 func (h *UserHandler) RegisterPhone(c *gin.Context) {
 	var input form.RegisterPhoneNumber
 	if err := c.Bind(&input); err != nil {
-		c.Error(err)
+		infra.GetLogging().Log(logrus.ErrorLevel, err)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
 	userEntity := entity.UserEntity{}
 	user, err := userEntity.Create(input)
 	if err != nil {
-		c.AbortWithStatusJSON(500, ResponseFromHandler{
-			Data:  err.Error(),
-			Error: err,
-		})
+		infra.GetLogging().Log(logrus.ErrorLevel, err)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
 	userView, err := response.PopulateUserView(user)
 	if err != nil {
-		c.Error(err)
+		infra.GetLogging().Log(logrus.ErrorLevel, err)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 	c.JSON(200, userView)

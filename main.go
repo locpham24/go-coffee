@@ -15,5 +15,8 @@ func main() {
 	}
 
 	infra.InitPostgreSQL(configs)
+
+	infra.InitLogging()
+
 	engine.Run()
 }
