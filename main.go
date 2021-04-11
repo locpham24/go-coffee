@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/locpham24/go-coffee/app/entity"
 	"github.com/locpham24/go-coffee/app/handler"
+	"github.com/locpham24/go-coffee/app/orm"
 	"github.com/locpham24/go-coffee/config"
 	"github.com/locpham24/go-coffee/infra"
 )
@@ -18,7 +18,7 @@ func main() {
 	}
 
 	infra.InitPostgreSQL(configs)
-	entity.InitOrmInstances()
+	orm.InitOrmInstances()
 
 	infra.InitLogging()
 
