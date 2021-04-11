@@ -1,15 +1,13 @@
 package model
 
-import "time"
+import (
+	"github.com/jinzhu/gorm"
+)
 
 type User struct {
-	tableName   struct{} `sql:"users,alias:users" pg:",discard_unknown_columns"`
-	Id          int
+	gorm.Model  `json:"model"`
 	PhoneNumber string
 	Password    string
-	CreatedAt   time.Time
 	CreatedBy   int
 	UpdatedBy   int
-	UpdatedAt   time.Time
-	DeletedAt   time.Time
 }

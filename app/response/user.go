@@ -2,21 +2,20 @@ package response
 
 import (
 	"github.com/locpham24/go-coffee/app/model"
-	"time"
 )
 
 type User struct {
-	Id          int    `json:"id"`
+	Id          uint   `json:"id"`
 	PhoneNumber string `json:"phoneNumber"`
 	CreatedAt   string `json:"createdAt"`
 }
 
 func PopulateUserView(user model.User) (User, error) {
 	var userView User
-	createdAt := time.Time(user.CreatedAt).String()
+	createdAt := user.CreatedAt.String()
 
 	userView = User{
-		Id:          user.Id,
+		Id:          user.ID,
 		PhoneNumber: user.PhoneNumber,
 		CreatedAt:   createdAt,
 	}

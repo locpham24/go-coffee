@@ -1,9 +1,13 @@
 package orm
 
-import "github.com/locpham24/go-coffee/app/model"
-import "github.com/locpham24/go-coffee/infra"
+import (
+	"github.com/jinzhu/gorm"
+	"github.com/locpham24/go-coffee/app/model"
+)
 
-type userOrm struct{}
+type userOrm struct {
+	db *gorm.DB
+}
 
 type IUser interface {
 	Create(user *model.User) (err error)
@@ -16,17 +20,26 @@ func init() {
 	User = &userOrm{}
 }
 
+// this function help to mock different database. example: for testing
+func InitUserOrm(db *gorm.DB) *userOrm {
+	return &userOrm{db}
+}
+
 func (o *userOrm) Create(user *model.User) (err error) {
-	result := infra.GetDB().Create(user)
+	result := o.db.Create(user)
 	return result.Error
 }
 
-func (o *userOrm) GetByPhoneNumber(phoneNumber string) (user *model.User, err error) {
-	result := infra.GetDB().
+func (o *userOrm) GetByPhoneNumber(phoneNumber string) (*model.User, error) {
+	var user model.User
+	result := o.db.Unscoped().Model(&model.User{}).
 		Where("phone_number = ?", phoneNumber).
-		Limit(1).
 		Order("id DESC").
+		Limit(1).
 		Find(&user)
 
-	return user, result.Error
+	if result.Error == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return &user, result.Error
 }

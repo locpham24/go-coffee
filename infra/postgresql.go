@@ -2,9 +2,9 @@ package infra
 
 import (
 	"fmt"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/locpham24/go-coffee/config"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 type PGDB struct {
@@ -20,11 +20,14 @@ func InitPostgreSQL(config config.Config) error {
 		config.PostgreSQL.Password,
 		config.PostgreSQL.Name,
 		config.PostgreSQL.Port)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+	db, err := gorm.Open("postgres", dsn)
 	if err != nil {
 		panic(err)
 		return err
 	}
+
+	db.LogMode(true)
 
 	pgSingleton = &PGDB{db}
 
@@ -36,4 +39,8 @@ func GetDB() *PGDB {
 		panic("can not connect database")
 	}
 	return pgSingleton
+}
+
+func ClosePostgreSql() error {
+	return pgSingleton.Close()
 }
