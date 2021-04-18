@@ -1,0 +1,10 @@
+config/config.yaml
+bin/
+log/
+*.log
+
+.DS_Store
+
+# go module
+go.mod
+go.sum
