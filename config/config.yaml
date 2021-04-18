@@ -1,7 +1,7 @@
 postgresql:
-  username: "default"
-  password: "secret"
-  host: "0.0.0.0"
+  username: "pfjdfeytxeglqa"
+  password: "1fa8282add8dc26be15638d799bd1d23e8a9205ac157e7dc92576014b2ad692e"
+  host: "ec2-54-211-176-156.compute-1.amazonaws.com"
   port: "5432"
-  name: "default"
+  name: "d93jql3nukmpsr"
   debug: true
