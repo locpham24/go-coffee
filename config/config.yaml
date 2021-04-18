@@ -5,3 +5,4 @@ postgresql:
   port: "5432"
   name: "d93jql3nukmpsr"
   debug: true
+  ssl: require

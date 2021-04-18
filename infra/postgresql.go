@@ -14,12 +14,13 @@ type PGDB struct {
 var pgSingleton *PGDB
 
 func InitPostgreSQL(config config.Config) error {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
 		config.PostgreSQL.Host,
 		config.PostgreSQL.Username,
 		config.PostgreSQL.Password,
 		config.PostgreSQL.Name,
-		config.PostgreSQL.Port)
+		config.PostgreSQL.Port,
+		config.PostgreSQL.SSL)
 
 	db, err := gorm.Open("postgres", dsn)
 	if err != nil {

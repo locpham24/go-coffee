@@ -16,6 +16,7 @@ type PostgreSQL struct {
 	Port     string
 	Name     string
 	Debug    bool
+	SSL      string
 }
 
 func init() {

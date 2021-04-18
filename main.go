@@ -5,6 +5,7 @@ import (
 	"github.com/locpham24/go-coffee/app/orm"
 	"github.com/locpham24/go-coffee/config"
 	"github.com/locpham24/go-coffee/infra"
+	"os"
 )
 
 func main() {
@@ -22,7 +23,13 @@ func main() {
 
 	infra.InitLogging()
 
-	engine.Run()
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "8080"
+	}
+
+	engine.Run(":" + port)
 }
 
 func close() {
