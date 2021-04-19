@@ -27,6 +27,7 @@ func setupApiV1(app *gin.Engine) {
 	// auth group
 	authGroup := apiGroup.Group("auth")
 	POST(authGroup, "/register/phone", userHandler.RegisterPhone)
+	POST(authGroup, "/phone/login", userHandler.LoginPhone)
 }
 
 func GET(group *gin.RouterGroup, relativePath string, f func(*gin.Context)) {

@@ -13,6 +13,7 @@ import (
 type UserRouter interface {
 	Hello(c *gin.Context)
 	RegisterPhone(c *gin.Context)
+	LoginPhone(c *gin.Context)
 }
 
 func NewUserRouter() UserRouter {
@@ -49,4 +50,23 @@ func (h *UserHandler) RegisterPhone(c *gin.Context) {
 		return
 	}
 	c.JSON(200, userView)
+}
+
+func (h *UserHandler) LoginPhone(c *gin.Context) {
+	var input form.LoginPhoneNumber
+	if err := c.Bind(&input); err != nil {
+		infra.GetLogging().Log(logrus.ErrorLevel, err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	userEntity := entity.UserEntity{}
+	tokens, err := userEntity.LoginPhone(input)
+	if err != nil {
+		infra.GetLogging().Log(logrus.ErrorLevel, err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	c.JSON(200, tokens)
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/locpham24/go-coffee/app/handler"
 	"github.com/locpham24/go-coffee/app/orm"
+	"github.com/locpham24/go-coffee/app/orm/redis"
 	"github.com/locpham24/go-coffee/config"
 	"github.com/locpham24/go-coffee/infra"
 	"os"
@@ -19,7 +20,9 @@ func main() {
 	}
 
 	infra.InitPostgreSQL(configs)
+	infra.InitRedis()
 	orm.InitOrmInstances()
+	redis.InitRedisInstances()
 
 	infra.InitLogging()
 
