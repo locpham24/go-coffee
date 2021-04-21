@@ -13,6 +13,7 @@ type jwtToken struct {
 
 type IJwtToken interface {
 	Create(userId uint, td *modelredis.TokenDetails) (err error)
+	Get(td *modelredis.TokenDetails) (uint64, error)
 }
 
 var Token IJwtToken
@@ -31,4 +32,13 @@ func (o *jwtToken) Create(userId uint, td *modelredis.TokenDetails) (err error) 
 		return errRefresh
 	}
 	return nil
+}
+
+func (o *jwtToken) Get(tokenDetail *modelredis.TokenDetails) (uint64, error) {
+	userIdStr, err := o.client.Get(tokenDetail.AccessUuid).Result()
+	if err != nil {
+		return 0, err
+	}
+	userId, _ := strconv.ParseUint(userIdStr, 10, 64)
+	return userId, nil
 }

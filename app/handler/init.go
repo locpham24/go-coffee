@@ -2,6 +2,11 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/locpham24/go-coffee/app/middlewares"
+)
+
+const (
+	UserGinKey = "CurrentUserId"
 )
 
 func InitEngine() *gin.Engine {
@@ -28,6 +33,10 @@ func setupApiV1(app *gin.Engine) {
 	authGroup := apiGroup.Group("auth")
 	POST(authGroup, "/register/phone", userHandler.RegisterPhone)
 	POST(authGroup, "/phone/login", userHandler.LoginPhone)
+
+	usersGroup := apiGroup.Group("users")
+	usersGroup.Use(middlewares.RequireLogin())
+	GET(usersGroup, "/profile", userHandler.Get)
 }
 
 func GET(group *gin.RouterGroup, relativePath string, f func(*gin.Context)) {

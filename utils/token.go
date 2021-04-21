@@ -3,6 +3,7 @@ package utils
 import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/locpham24/go-coffee/app/model/redis"
+	"github.com/locpham24/go-coffee/config"
 	"github.com/twinj/uuid"
 	"time"
 )
@@ -20,15 +21,15 @@ func CreateToken(userId int) (*redis.TokenDetails, error) {
 	redisTokenDetail := &redis.TokenDetails{}
 
 	// access token will expire after 15 minute
-	redisTokenDetail.AtExpires = time.Now().Add(time.Minute * 15).Unix()
+	redisTokenDetail.AtExpires = time.Now().Add(time.Duration(config.Get().JwtToken.AccessTokenMaxAge) * time.Second).Unix()
 	redisTokenDetail.AccessUuid = uuid.NewV4().String()
 
 	// refresh token will expire after 7 days
-	redisTokenDetail.RtExpires = time.Now().Add(time.Hour * 24 * 7).Unix()
+	redisTokenDetail.RtExpires = time.Now().Add(time.Duration(config.Get().JwtToken.RefreshTokenMaxAge) * time.Second).Unix()
 	redisTokenDetail.RefreshUuid = uuid.NewV4().String()
 
-	accessKey := []byte("AccessKey")
-	refreshKey := []byte("RefreshKey")
+	accessKey := []byte(config.Get().JwtToken.AccessTokenSecretKey)
+	refreshKey := []byte(config.Get().JwtToken.RefreshTokenSecretKey)
 
 	// Create the Claims
 	accessTokenClaims := UserClaims{

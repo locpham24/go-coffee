@@ -20,7 +20,7 @@ func main() {
 	}
 
 	infra.InitPostgreSQL(configs)
-	infra.InitRedis()
+	infra.InitRedis(configs)
 	orm.InitOrmInstances()
 	redis.InitRedisInstances()
 
@@ -37,4 +37,5 @@ func main() {
 
 func close() {
 	infra.ClosePostgreSql()
+	infra.CloseRedis()
 }

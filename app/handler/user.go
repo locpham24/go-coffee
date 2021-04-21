@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/locpham24/go-coffee/app/entity"
 	"github.com/locpham24/go-coffee/app/form"
@@ -8,12 +9,14 @@ import (
 	"github.com/locpham24/go-coffee/infra"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"strconv"
 )
 
 type UserRouter interface {
 	Hello(c *gin.Context)
 	RegisterPhone(c *gin.Context)
 	LoginPhone(c *gin.Context)
+	Get(c *gin.Context)
 }
 
 func NewUserRouter() UserRouter {
@@ -69,4 +72,30 @@ func (h *UserHandler) LoginPhone(c *gin.Context) {
 	}
 
 	c.JSON(200, tokens)
+}
+
+func (h *UserHandler) Get(c *gin.Context) {
+	userIdGinKey := c.MustGet(UserGinKey)
+	userIdStr := fmt.Sprintf("%v", userIdGinKey)
+	userId, err := strconv.Atoi(userIdStr)
+	if err != nil {
+		infra.GetLogging().Log(logrus.ErrorLevel, err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	userEntity := entity.UserEntity{}
+	user, err := userEntity.GetById(userId)
+	if err != nil {
+		infra.GetLogging().Log(logrus.ErrorLevel, err)
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	userView, err := response.PopulateUserView(user)
+	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+	}
+
+	c.JSON(200, userView)
 }

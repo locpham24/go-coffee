@@ -79,3 +79,14 @@ func (e *UserEntity) LoginPhone(input form.LoginPhoneNumber) (map[string]string,
 
 	return tokens, err
 }
+
+func (e *UserEntity) GetById(userId int) (model.User, error) {
+	user, err := orm.User.GetById(userId)
+	if err != nil {
+		return model.User{}, err
+	}
+	if user == nil {
+		return model.User{}, err
+	}
+	return *user, err
+}

@@ -7,4 +7,5 @@ type TokenDetails struct {
 	RefreshUuid  string
 	AtExpires    int64
 	RtExpires    int64
+	UserId       uint64
 }
